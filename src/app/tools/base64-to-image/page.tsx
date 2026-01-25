@@ -55,7 +55,7 @@ const Base64ToImageTool = () => {
                             </div>
                             <a
                                 href={imageSrc}
-                                download={`kynex-image-${Date.now()}.png`}
+                                download="kynex-image-generated.png"
                                 className="px-8 py-4 bg-white text-indigo-900 rounded-2xl font-bold text-sm uppercase tracking-widest hover:bg-indigo-400 hover:text-white transition-all shadow-xl active:scale-95"
                             >
                                 Download Image

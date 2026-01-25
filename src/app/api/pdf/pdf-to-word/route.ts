@@ -15,28 +15,25 @@ export async function POST(req: NextRequest) {
         // Use pdfjs-dist for text extraction
         let textContent = '';
         try {
-            // In Node.js environment (Next.js API route), we use the legacy build for better compatibility
-            // and we don't necessarily need a worker if we load it this way.
-            const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
-
-            // Disable worker for simpler Node.js usage
-            const loadingTask = pdfjs.getDocument({
-                data: new Uint8Array(buffer),
-                useWorkerFetch: false,
-                isEvalSupported: false,
-                useSystemFonts: true
-            });
-
-            const pdf = await loadingTask.promise;
+            const pdfjs = await import('pdfjs-dist');
+            
+            // Set up the worker for server environments
+            const workerUrl = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.mjs`;
+            pdfjs.GlobalWorkerOptions.workerSrc = workerUrl;
+            
+            const typedArray = new Uint8Array(buffer);
+            const pdf = await pdfjs.getDocument({ data: typedArray }).promise;
             const numPages = pdf.numPages;
-
+            
             for (let i = 1; i <= numPages; i++) {
                 const page = await pdf.getPage(i);
                 const textContentDict = await page.getTextContent();
-                const pageText = textContentDict.items
-                    .map((item: any) => item.str)
-                    .join(' ');
-                textContent += `Page ${i}\n${'-'.repeat(20)}\n${pageText}\n\n`;
+                const pageText = textContentDict.items.map((item: any) => item.str).join(' ');
+                textContent += `Page ${i}
+${'-'.repeat(20)}
+${pageText}
+
+`;
             }
         } catch (pdfError) {
             console.error('PDF parsing failed:', pdfError);

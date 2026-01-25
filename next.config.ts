@@ -4,7 +4,6 @@ import path from "path";
 const nextConfig: NextConfig = {
   /* config options here */
   reactCompiler: true,
-  turbopack: {},
   serverExternalPackages: ['muhammara', 'docx', 'pdfjs-dist', 'sharp', 'sitemap', 'nanoid', 're2'],
   webpack: (config, { isServer }) => {
     if (isServer) {

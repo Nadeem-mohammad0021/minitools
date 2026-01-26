@@ -11,6 +11,23 @@ interface CategoryPageProps {
 
 export const CategoryPage: React.FC<CategoryPageProps> = ({ categoryId }) => {
   const { getToolsByCategory, allCategories, searchTerm, setSearchTerm } = useApp();
+  
+  // Suppress hydration warnings for browser extension interference
+  React.useEffect(() => {
+    // Clean up any fdprocessedid attributes added by browser extensions
+    const cleanupExtensionAttributes = () => {
+      document.querySelectorAll('[fdprocessedid]').forEach(el => {
+        el.removeAttribute('fdprocessedid');
+      });
+    };
+    
+    // Run cleanup after hydration
+    if (typeof window !== 'undefined') {
+      setTimeout(cleanupExtensionAttributes, 100);
+    }
+    
+    return cleanupExtensionAttributes;
+  }, []);
 
   const category = allCategories.find(c => c.id === categoryId);
   const tools = getToolsByCategory(categoryId);

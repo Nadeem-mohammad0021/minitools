@@ -65,13 +65,13 @@ export const FileUpload: React.FC<FileUploadProps> = ({
                 onChange={handleInputChange}
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
             />
-            <div className="space-y-4">
-                <div className="text-6xl group-hover:scale-110 transition-transform duration-300">{icon}</div>
-                <div>
-                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{label}</h3>
-                    <p className="text-slate-500 text-sm">Supports {accept?.replace(/\./g, '').toUpperCase() || 'any format'}</p>
+            <div className="space-y-4 p-2">
+                <div className="text-5xl sm:text-6xl group-hover:scale-110 transition-transform duration-300">{icon}</div>
+                <div className="max-w-xs mx-auto">
+                    <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-2">{label}</h3>
+                    <p className="text-slate-500 text-xs sm:text-sm">Supports {accept?.replace(/\./g, '').toUpperCase() || 'any format'}</p>
                 </div>
-                <button className="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold text-sm shadow-lg shadow-indigo-200 dark:shadow-none transition-all">
+                <button className="px-6 py-2 sm:px-8 sm:py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold text-xs sm:text-sm shadow-lg shadow-indigo-200 dark:shadow-none transition-all min-h-[44px]">
                     Select Files
                 </button>
             </div>

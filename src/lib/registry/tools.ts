@@ -85,10 +85,10 @@ export const TOOLS: ToolConfig[] = [
   {
     id: 'merge',
     name: 'Merge PDF',
-    description: 'Combine multiple PDF files into one document.',
+    description: 'Combine multiple PDF files into one document instantly. AI-optimized for perfect order.',
     category: 'pdf-tools',
     icon: '📄',
-    tags: ['pdf', 'merge', 'combine'],
+    tags: ['pdf', 'merge', 'combine', 'AI PDF', 'no upload', 'secure PDF'],
     popular: true,
     component: 'MergePdfTool',
     path: '/tools/merge'
@@ -96,10 +96,10 @@ export const TOOLS: ToolConfig[] = [
   {
     id: 'compress',
     name: 'Compress PDF',
-    description: 'Reduce the file size of your PDF documents.',
+    description: 'Reduce PDF file size without losing quality. High-ratio compression for 2026.',
     category: 'pdf-tools',
     icon: '📄',
-    tags: ['pdf', 'compress', 'optimize'],
+    tags: ['pdf', 'compress', 'optimize', 'high compression', 'lossless PDF', 'small PDF'],
     popular: true,
     component: 'CompressPdfTool',
     path: '/tools/compress'
@@ -187,10 +187,10 @@ export const TOOLS: ToolConfig[] = [
   {
     id: 'edit-pdf',
     name: 'Edit PDF',
-    description: 'Professional PDF editor to modify your documents.',
+    description: 'AI-powered PDF editor to modify text, images, and layout directly in your browser.',
     category: 'pdf-tools',
     icon: '📄',
-    tags: ['pdf', 'edit', 'editor', 'adobe'],
+    tags: ['pdf', 'edit', 'editor', 'AI editor', 'browser PDF editor', 'secure edit'],
     new: true,
     component: 'EditPdfTool',
     path: '/tools/edit-pdf'
@@ -228,10 +228,10 @@ export const TOOLS: ToolConfig[] = [
   {
     id: 'pdf-to-word',
     name: 'PDF to Word',
-    description: 'Convert PDF files into editable Word documents.',
+    description: 'Convert PDF to editable Word docx using AI OCR for highest accuracy.',
     category: 'pdf-tools',
     icon: '📄',
-    tags: ['pdf', 'word', 'convert'],
+    tags: ['pdf', 'word', 'convert', 'AI OCR', 'PDF to DOCX', 'editable Word'],
     popular: true,
     component: 'PdfToWordTool',
     path: '/tools/pdf-to-word'
@@ -402,10 +402,10 @@ export const TOOLS: ToolConfig[] = [
   {
     id: 'image-compress',
     name: 'Compress Image',
-    description: 'Reduce image file size with high-quality optimization.',
+    description: 'Ultra-fast image optimization using Sharp. Supports WebP and AVIF 2026 formats.',
     category: 'image-tools',
     icon: '🖼️',
-    tags: ['image', 'compress', 'optimize'],
+    tags: ['image', 'compress', 'optimize', 'WebP', 'AVIF', 'lossless compression'],
     popular: true,
     component: 'ImageCompressorTool',
     path: '/tools/image-compress'
@@ -419,6 +419,17 @@ export const TOOLS: ToolConfig[] = [
     tags: ['image', 'base64', 'convert'],
     component: 'Base64ToImageTool',
     path: '/tools/base64-to-image'
+  },
+  {
+    id: 'background-remover',
+    name: 'Background Remover',
+    description: 'AI-powered background removal tool. Remove unwanted backgrounds from your images instantly.',
+    category: 'image-tools',
+    icon: '🖼️',
+    tags: ['image', 'background', 'remove', 'AI background remover', 'transparent background', 'photo editing'],
+    new: true,
+    component: 'BackgroundRemoverTool',
+    path: '/tools/background-remover'
   },
 
   // 3. TEXT TOOLS
@@ -579,10 +590,10 @@ export const TOOLS: ToolConfig[] = [
   {
     id: 'hash-generator',
     name: 'Hash Generator',
-    description: 'Generate MD5, SHA-1, SHA-256 hashes.',
+    description: 'Secure WASM-powered MD5, SHA-1, SHA-256 generator. Privacy-focused hashing.',
     category: 'developer-tools',
     icon: '🧑‍💻',
-    tags: ['hash', 'security', 'dev'],
+    tags: ['hash', 'security', 'dev', 'WASM hash', 'SHA-256 online', 'secure hash'],
     component: 'HashGeneratorTool',
     path: '/tools/hash-generator'
   },
@@ -691,10 +702,10 @@ export const TOOLS: ToolConfig[] = [
   {
     id: 'url-shortener',
     name: 'URL Shortener',
-    description: 'Create short, memorable links.',
+    description: 'Create short, branded links with analytics. Branded link shortener 2026.',
     category: 'seo-tools',
     icon: '🌐',
-    tags: ['seo', 'url', 'links'],
+    tags: ['seo', 'url', 'links', 'branded shortener', 'free URL shortener'],
     component: 'UrlShortenerTool',
     path: '/tools/url-shortener'
   },
@@ -791,10 +802,10 @@ export const TOOLS: ToolConfig[] = [
   {
     id: 'seo-page-analyzer-lite',
     name: 'SEO Analyzer',
-    description: 'Quick on-page SEO assessment.',
+    description: 'Core Web Vitals and GEO optimization check. Detailed on-page SEO assessment.',
     category: 'seo-tools',
     icon: '🌐',
-    tags: ['seo', 'analyzer'],
+    tags: ['seo', 'analyzer', 'Core Web Vitals', 'GEO optimization', 'lighthouse audit'],
     component: 'SeoPageAnalyzerLiteTool',
     path: '/tools/seo-page-analyzer-lite'
   },

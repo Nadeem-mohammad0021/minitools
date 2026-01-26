@@ -22,26 +22,27 @@ export default function PdfToImageTool() {
         setProgress(0);
 
         try {
-            // Dynamic import
-            const pdfJS = await import('pdfjs-dist');
-            const PDFJS_VERSION = '3.11.174'; // Matching the one used in Edit PDF for consistency
-            pdfJS.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${PDFJS_VERSION}/pdf.worker.min.js`;
+            const pdfjs = await import('pdfjs-dist');
+            // Use the bundled worker or a reliable CDN that matches the version
+            pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
             const arrayBuffer = await file.arrayBuffer();
-            const pdf = await pdfJS.getDocument({ data: arrayBuffer }).promise;
+            const loadingTask = pdfjs.getDocument({ data: arrayBuffer });
+            const pdf = await loadingTask.promise;
             const totalPages = pdf.numPages;
             const zip = new JSZip();
 
             for (let i = 1; i <= totalPages; i++) {
                 const page = await pdf.getPage(i);
-                const viewport = page.getViewport({ scale: 2.0 }); // High quality
+                const viewport = page.getViewport({ scale: 2.0 }); // 2x for high quality
 
                 const canvas = document.createElement('canvas');
                 const context = canvas.getContext('2d');
-                canvas.height = viewport.height;
-                canvas.width = viewport.width;
 
                 if (context) {
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+
                     await page.render({
                         canvasContext: context,
                         viewport: viewport,
@@ -49,7 +50,7 @@ export default function PdfToImageTool() {
                     }).promise;
 
                     const blob = await new Promise<Blob | null>(resolve =>
-                        canvas.toBlob(resolve, 'image/jpeg', 0.9)
+                        canvas.toBlob(resolve, 'image/jpeg', 0.95)
                     );
 
                     if (blob) {
@@ -61,7 +62,7 @@ export default function PdfToImageTool() {
             }
 
             const content = await zip.generateAsync({ type: "blob" });
-            downloadFile(content, `converted-images.zip`, 'application/zip');
+            downloadFile(content, `kynex-pdf-images.zip`, 'application/zip');
 
         } catch (error) {
             console.error(error);

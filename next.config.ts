@@ -3,15 +3,8 @@ import path from "path";
 
 const nextConfig: NextConfig = {
   /* config options here */
-  experimental: {
-    reactCompiler: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
+  reactCompiler: true,
+  turbopack: {},
   serverExternalPackages: ['muhammara', 'docx', 'pdfjs-dist', 'sharp', 'sitemap', 'nanoid', 're2'],
   webpack: (config, { isServer }) => {
     if (isServer) {

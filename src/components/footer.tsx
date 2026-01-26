@@ -18,8 +18,14 @@ const Footer = () => {
                 MiniTools
               </span>
             </Link>
-            <p className="text-slate-500 dark:text-slate-400 leading-relaxed mb-6">
+            <p className="text-slate-500 dark:text-slate-400 leading-relaxed mb-4">
               Your all-in-one platform for professional grade online utilities. Free, fast, and secure.
+            </p>
+            <p className="text-slate-500 dark:text-slate-400 text-sm">
+              by <a href="https://kynex.dev/" className="font-bold italic text-slate-700 dark:text-slate-300 tracking-tight">KYNEX</a><span className="font-bold italic text-slate-500 dark:text-slate-400">.dev</span>
+            </p>
+            <p className="text-slate-400 text-xs mt-2">
+              <a href="https://kynex.dev" target="_blank" rel="noopener noreferrer" className="hover:underline">Admin Dashboard</a>
             </p>
             <div className="flex space-x-4">
               {/* Social placeholders could go here */}
@@ -76,7 +82,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-slate-200 dark:border-slate-900 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-slate-500 dark:text-slate-400">
-          <p>© {new Date().getFullYear()} MiniTools. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} MiniTools by KYNEX.dev. All rights reserved.</p>
           <p>Made with ❤️ for the community</p>
         </div>
       </div>

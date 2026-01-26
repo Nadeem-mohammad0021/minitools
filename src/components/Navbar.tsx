@@ -38,19 +38,24 @@ const Navbar = () => {
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="group flex items-center space-x-3">
-            <div className="relative">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-lg group-hover:scale-105 transition-transform duration-300">
-                K
-              </div>
-              <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white dark:border-slate-900 rounded-full"></div>
+            <div className="w-10 h-10 flex items-center justify-center">
+              <img src="/logos/logo.png" alt="MiniTools Logo" className="w-full h-full object-contain" />
             </div>
             <div className="flex flex-col">
               <span className="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-none">
-                KYNEX
-              </span>
-              <span className="text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 font-bold">
                 MiniTools
               </span>
+              <div className="flex items-baseline gap-0">
+                <span className="font-bold italic text-slate-500 dark:text-slate-400 text-[10px] uppercase tracking-tight">
+                  BY
+                </span>
+                <span className="font-bold italic text-slate-700 dark:text-slate-300 text-[10px] tracking-tight ml-1">
+                  KYNEX
+                </span>
+                <span className="font-bold italic text-slate-500 dark:text-slate-400 text-[10px]">
+                  .dev
+                </span>
+              </div>
             </div>
           </Link>
 
@@ -138,7 +143,6 @@ const Navbar = () => {
         </div>
       </header>
       {/* Spacer */}
-      <div className="h-24 md:h-28" />
     </>
   );
 };

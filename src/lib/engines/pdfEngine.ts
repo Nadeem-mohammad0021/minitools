@@ -124,8 +124,8 @@ export async function unlockPDF(file: ArrayBuffer, password: string): Promise<Ui
 }
 
 /**
- * Compresses a PDF (Logical compression via object streams)
- * @param quality 'low' | 'medium' | 'high' - high is extreme compression
+ * Compresses a PDF using pdf-lib for basic compression
+ * @param quality 'low' | 'medium' | 'high' - 'low' is maximum compression (smallest file)
  */
 export async function compressPDF(
   file: ArrayBuffer,
@@ -133,18 +133,8 @@ export async function compressPDF(
 ): Promise<Uint8Array> {
   const pdfDoc = await PDFDocument.load(file);
 
-  // pdf-lib's built-in options:
-  // useObjectStreams: combines multiple objects into a single stream, reduces size.
-  // We can also try to re-compress the document by loading and saving with specific flags.
-
-  const options = {
-    useObjectStreams: true,
-    addDefaultPage: false,
-  };
-
-  // For high compression, we can potentially do more, but pdf-lib is limited.
-  // One thing we can do is ensure object streams are used and maybe remove metadata.
-  if (quality === 'high') {
+  // Optimization: For max compression (low quality), remove metadata
+  if (quality === 'low') {
     pdfDoc.setTitle('');
     pdfDoc.setAuthor('');
     pdfDoc.setSubject('');
@@ -153,7 +143,82 @@ export async function compressPDF(
     pdfDoc.setCreator('');
   }
 
+  const options = {
+    useObjectStreams: true,
+    addDefaultPage: false,
+    updateMetadata: quality !== 'low'
+  };
+
   return await pdfDoc.save(options);
+}
+
+/**
+ * Advanced PDF compression using external tools when available
+ * Falls back to basic compression if external tools aren't available
+ */
+export async function compressPDFAdvanced(
+  file: ArrayBuffer,
+  quality: 'low' | 'medium' | 'high' = 'medium'
+): Promise<Uint8Array> {
+  try {
+    const { exec } = await import('child_process');
+    const fs = await import('fs');
+    const path = await import('path');
+    const os = await import('os');
+    const { promisify } = await import('util');
+
+    const execAsync = promisify(exec);
+
+    // Create temporary files with unique names
+    const tempDir = os.tmpdir();
+    const timestamp = Date.now();
+    const inputPath = path.join(tempDir, `comp_in_${timestamp}.pdf`);
+    const outputPath = path.join(tempDir, `comp_out_${timestamp}.pdf`);
+
+    fs.writeFileSync(inputPath, Buffer.from(file));
+
+    // Ghostscript settings for different quality levels
+    // /screen (72 dpi) - lowest quality, smallest size
+    // /ebook (150 dpi) - medium quality
+    // /printer (300 dpi) - high quality
+    // /prepress (300 dpi, color preserving)
+
+    let gsQuality;
+    switch (quality) {
+      case 'low': gsQuality = '/screen'; break;
+      case 'medium': gsQuality = '/ebook'; break;
+      case 'high': gsQuality = '/printer'; break;
+      default: gsQuality = '/ebook';
+    }
+
+    const gsCommand = `gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=${gsQuality} -dNOPAUSE -dQUIET -dBATCH -sOutputFile="${outputPath}" "${inputPath}"`;
+
+    try {
+      await execAsync(gsCommand);
+
+      if (fs.existsSync(outputPath)) {
+        const result = fs.readFileSync(outputPath);
+
+        // Cleanup
+        try { fs.unlinkSync(inputPath); } catch { }
+        try { fs.unlinkSync(outputPath); } catch { }
+
+        return new Uint8Array(result);
+      }
+    } catch (gsError: any) {
+      // Silently fall back if gs is not installed
+      console.log('Ghostscript not available, using pdf-lib fallback');
+    }
+
+    // Cleanup in case gs failed but files exist
+    try { if (fs.existsSync(inputPath)) fs.unlinkSync(inputPath); } catch { }
+
+  } catch (e: any) {
+    console.warn('Advanced compression error:', e.message);
+  }
+
+  // High reliable fallback
+  return await compressPDF(file, quality);
 }
 
 /**
@@ -367,4 +432,37 @@ export async function imagesToPDF(files: ArrayBuffer[], types: string[]): Promis
   }
 
   return await pdfDoc.save();
+}
+
+/**
+ * Gets PDF metadata and basic info
+ */
+export async function getPDFInfo(file: ArrayBuffer) {
+  const pdfDoc = await PDFDocument.load(file);
+  return {
+    pageCount: pdfDoc.getPageCount(),
+    title: pdfDoc.getTitle() || '',
+    author: pdfDoc.getAuthor() || '',
+    subject: pdfDoc.getSubject() || '',
+    creator: pdfDoc.getCreator() || '',
+    keywords: pdfDoc.getKeywords() || '',
+    producer: pdfDoc.getProducer() || '',
+    creationDate: pdfDoc.getCreationDate(),
+    modificationDate: pdfDoc.getModificationDate(),
+  };
+}
+
+/**
+ * Note: PDF thumbnail generation typically requires a canvas implementation
+ * which is available in the browser via pdf.js.
+ * This function is a placeholder/wrapper that hints at how to use pdf.js
+ * for server-side or browser-side rendering.
+ */
+export async function extractTextFromPDF(file: ArrayBuffer): Promise<string> {
+  // Using pdf-lib for basic text extraction is limited.
+  // In a real production app with Next.js, we'd use pdfjs-dist on the server
+  // or use an API route that handles the extraction.
+  // For now, we'll return a placeholder to be implemented in the API routes
+  // or components where pdfjs-dist is easier to use with DOM/Canvas if needed.
+  return "Text extraction logic integrated in tool-specific components/API routes.";
 }

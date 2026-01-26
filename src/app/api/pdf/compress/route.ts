@@ -12,8 +12,8 @@ export async function POST(req: NextRequest) {
 
         const buffer = await file.arrayBuffer();
 
-        const { compressPDF } = await import('@/lib/engines/pdfEngine');
-        const compressedPdf = await compressPDF(buffer, quality as any);
+        const { compressPDFAdvanced } = await import('@/lib/engines/pdfEngine');
+        const compressedPdf = await compressPDFAdvanced(buffer, quality as any);
 
         return new NextResponse(Buffer.from(compressedPdf), {
             headers: {

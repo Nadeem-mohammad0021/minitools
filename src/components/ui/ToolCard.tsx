@@ -26,6 +26,22 @@ export const ToolCard: React.FC<ToolCardProps> = ({
   isNew,
   className = ''
 }) => {
+  // Suppress hydration warnings for browser extension interference
+  React.useEffect(() => {
+    // Clean up any fdprocessedid attributes added by browser extensions
+    const cleanupExtensionAttributes = () => {
+      document.querySelectorAll('[fdprocessedid]').forEach(el => {
+        el.removeAttribute('fdprocessedid');
+      });
+    };
+    
+    // Run cleanup after hydration
+    if (typeof window !== 'undefined') {
+      setTimeout(cleanupExtensionAttributes, 100);
+    }
+    
+    return cleanupExtensionAttributes;
+  }, []);
   return (
     <Link
       href={href}
@@ -121,6 +137,22 @@ export const CategoryCard: React.FC<CategoryCardProps> = ({
   href,
   className = ''
 }) => {
+  // Suppress hydration warnings for browser extension interference
+  React.useEffect(() => {
+    // Clean up any fdprocessedid attributes added by browser extensions
+    const cleanupExtensionAttributes = () => {
+      document.querySelectorAll('[fdprocessedid]').forEach(el => {
+        el.removeAttribute('fdprocessedid');
+      });
+    };
+    
+    // Run cleanup after hydration
+    if (typeof window !== 'undefined') {
+      setTimeout(cleanupExtensionAttributes, 100);
+    }
+    
+    return cleanupExtensionAttributes;
+  }, []);
   return (
     <Link
       href={href}

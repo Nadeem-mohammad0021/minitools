@@ -17,6 +17,22 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   placeholder = 'Search tools...',
   className = ''
 }) => {
+  // Suppress hydration warnings for browser extension interference
+  React.useEffect(() => {
+    // Clean up any fdprocessedid attributes added by browser extensions
+    const cleanupExtensionAttributes = () => {
+      document.querySelectorAll('[fdprocessedid]').forEach(el => {
+        el.removeAttribute('fdprocessedid');
+      });
+    };
+    
+    // Run cleanup after hydration
+    if (typeof window !== 'undefined') {
+      setTimeout(cleanupExtensionAttributes, 100);
+    }
+    
+    return cleanupExtensionAttributes;
+  }, []);
   const [isFocused, setIsFocused] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -104,6 +120,22 @@ export const FilterChips: React.FC<FilterChipsProps> = ({
   availableFilters,
   className = ''
 }) => {
+  // Suppress hydration warnings for browser extension interference
+  React.useEffect(() => {
+    // Clean up any fdprocessedid attributes added by browser extensions
+    const cleanupExtensionAttributes = () => {
+      document.querySelectorAll('[fdprocessedid]').forEach(el => {
+        el.removeAttribute('fdprocessedid');
+      });
+    };
+    
+    // Run cleanup after hydration
+    if (typeof window !== 'undefined') {
+      setTimeout(cleanupExtensionAttributes, 100);
+    }
+    
+    return cleanupExtensionAttributes;
+  }, []);
   const toggleFilter = (filter: string) => {
     if (filters.includes(filter)) {
       onFilterChange(filters.filter(f => f !== filter));

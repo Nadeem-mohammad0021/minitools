@@ -2,6 +2,8 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { ToolLayout } from '@/components/ui/ToolLayout';
+import { generateMetaTags, isGeminiConfigured } from '@/lib/utils/gemini';
+import { Loader2 } from 'lucide-react';
 
 const MetaTagsGeneratorTool = () => {
   const [site, setSite] = useState('');
@@ -11,6 +13,8 @@ const MetaTagsGeneratorTool = () => {
   const [author, setAuthor] = useState('');
   const [url, setUrl] = useState('');
   const [res, setRes] = useState('');
+  const [isAiProcessing, setIsAiProcessing] = useState(false);
+  const geminiAvailable = isGeminiConfigured();
 
   const generate = useCallback(() => {
     let t = `<!-- Identity -->\n<title>${site}${page ? ` | ${page}` : ''}</title>\n`;
@@ -28,6 +32,60 @@ const MetaTagsGeneratorTool = () => {
     t += `<meta name="twitter:title" content="${page || site}">\n`;
     setRes(t);
   }, [site, page, desc, tags, author, url]);
+  
+  const generateWithAI = async () => {
+    if (!site.trim() || !desc.trim() || !geminiAvailable) return;
+    
+    setIsAiProcessing(true);
+    try {
+      const result = await generateMetaTags(site, desc, desc);
+      
+      // Update the fields with AI-generated content
+      setPage(result.metaTitle.replace(site, '').replace(' | ', ''));
+      setDesc(result.metaDescription);
+      setTags(result.keywords);
+      
+      // Generate the tags with AI content
+      let t = `<!-- Identity -->
+<title>${result.metaTitle}</title>
+`;
+      t += `<meta name="description" content="${result.metaDescription}">
+`;
+      t += `<meta name="keywords" content="${result.keywords}">
+`;
+      if (author) t += `<meta name="author" content="${author}">
+`;
+      if (url) t += `<link rel="canonical" href="${url}">
+`;
+
+      t += `
+<!-- Social Graph -->
+<meta property="og:title" content="${result.openGraphTitle}">
+`;
+      t += `<meta property="og:description" content="${result.openGraphDescription}">
+`;
+      t += `<meta property="og:type" content="website">
+`;
+      if (url) t += `<meta property="og:url" content="${url}">
+`;
+
+      t += `
+<!-- Global Broadcast -->
+<meta name="twitter:card" content="summary_large_image">
+`;
+      t += `<meta name="twitter:title" content="${result.openGraphTitle}">
+`;
+      t += `<meta name="twitter:description" content="${result.openGraphDescription}">
+`;
+      
+      setRes(t);
+    } catch (error) {
+      console.error('AI generation failed:', error);
+      alert('AI generation failed. Please try again.');
+    } finally {
+      setIsAiProcessing(false);
+    }
+  };
 
   useEffect(() => { generate(); }, [generate]);
 
@@ -59,6 +117,32 @@ const MetaTagsGeneratorTool = () => {
                 <label className="text-[10px] font-black uppercase text-slate-400 mb-2 block tracking-widest">Keywords</label>
                 <input value={tags} onChange={e => setTags(e.target.value)} className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-900 border border-transparent focus:border-black rounded-2xl outline-none font-bold" />
               </div>
+            </div>
+            
+            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <button 
+                onClick={generate} 
+                className="flex-1 py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold uppercase tracking-widest transition-all hover:scale-105 active:scale-95"
+              >
+                Generate Tags
+              </button>
+              
+              {geminiAvailable && (
+                <button 
+                  onClick={generateWithAI}
+                  disabled={isAiProcessing || !site.trim() || !desc.trim()}
+                  className="flex-1 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 disabled:from-slate-400 disabled:to-slate-500 text-white rounded-2xl font-bold uppercase tracking-widest transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+                >
+                  {isAiProcessing ? (
+                    <>
+                      <Loader2 className="animate-spin" />
+                      Generating with AI...
+                    </>
+                  ) : (
+                    'AI-Powered Generation'
+                  )}
+                </button>
+              )}
             </div>
           </div>
 

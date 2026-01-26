@@ -5,6 +5,7 @@ export async function POST(req: NextRequest) {
     try {
         const formData = await req.formData();
         const file = formData.get('file') as File;
+        const format = (formData.get('format') as string) || 'docx';
 
         if (!file) {
             return NextResponse.json({ error: 'File required' }, { status: 400 });
@@ -12,38 +13,58 @@ export async function POST(req: NextRequest) {
 
         const buffer = await file.arrayBuffer();
 
-        // Use pdfjs-dist for text extraction
+        // Use pdfjs-dist for high-quality text extraction
         let textContent = '';
+
         try {
-            const pdfjs = await import('pdfjs-dist');
-            
-            // Set up the worker for server environments
-            const workerUrl = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.mjs`;
-            pdfjs.GlobalWorkerOptions.workerSrc = workerUrl;
-            
+            // Import pdfjs-dist legacy for Node environment compatibility
+            const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
+
             const typedArray = new Uint8Array(buffer);
-            const pdf = await pdfjs.getDocument({ data: typedArray }).promise;
+            const loadingTask = pdfjs.getDocument({
+                data: typedArray,
+                useSystemFonts: true,
+                disableFontFace: false,
+                isEvalSupported: false
+            });
+
+            const pdf = await loadingTask.promise;
             const numPages = pdf.numPages;
-            
+
             for (let i = 1; i <= numPages; i++) {
                 const page = await pdf.getPage(i);
-                const textContentDict = await page.getTextContent();
-                const pageText = textContentDict.items.map((item: any) => item.str).join(' ');
-                textContent += `Page ${i}
-${'-'.repeat(20)}
-${pageText}
+                const textDict = await page.getTextContent();
 
-`;
+                // Advanced sorting to preserve layout
+                const items = textDict.items as any[];
+
+                // Group by Y to find rows, then sort by X
+                const rows: { [key: number]: any[] } = {};
+                items.forEach(item => {
+                    const y = Math.round(item.transform[5]);
+                    if (!rows[y]) rows[y] = [];
+                    rows[y].push(item);
+                });
+
+                const sortedY = Object.keys(rows).map(Number).sort((a, b) => b - a);
+                let pageText = "";
+
+                sortedY.forEach(y => {
+                    const rowItems = rows[y].sort((a, b) => a.transform[4] - b.transform[4]);
+                    pageText += rowItems.map(item => item.str).join(' ') + "\n";
+                });
+
+                textContent += pageText + "\n\n";
             }
-        } catch (pdfError) {
+        } catch (pdfError: any) {
             console.error('PDF parsing failed:', pdfError);
-            return NextResponse.json({ error: 'Failed to parse PDF content' }, { status: 500 });
+            return NextResponse.json({ error: `Failed to extract text: ${pdfError.message}` }, { status: 500 });
         }
 
-        // Create DOCX
+        // Create professional DOCX structure
         const paragraphs = textContent
             .split(/\n+/)
-            .filter((line: string) => line.trim().length > 0)
+            .filter(line => line.trim().length > 0)
             .map((line: string) => new Paragraph({
                 children: [
                     new TextRun({
@@ -52,7 +73,8 @@ ${pageText}
                     }),
                 ],
                 spacing: {
-                    after: 200,
+                    after: 120,
+                    line: 360, // 1.5 line spacing
                 }
             }));
 
@@ -68,11 +90,11 @@ ${pageText}
         return new NextResponse(docxBuffer as any, {
             headers: {
                 'Content-Type': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                'Content-Disposition': `attachment; filename="converted-${file.name.replace('.pdf', '')}.docx"`,
+                'Content-Disposition': `attachment; filename="converted-${file.name.replace('.pdf', '')}.${format}"`,
             },
         });
-    } catch (error) {
+    } catch (error: any) {
         console.error('PDF to Word Error:', error);
-        return NextResponse.json({ error: 'Failed to convert PDF to Word' }, { status: 500 });
+        return NextResponse.json({ error: `Failed to convert PDF: ${error.message}` }, { status: 500 });
     }
 }

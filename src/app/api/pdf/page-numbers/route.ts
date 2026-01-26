@@ -4,16 +4,22 @@ export async function POST(req: NextRequest) {
     try {
         const formData = await req.formData();
         const file = formData.get('file') as File;
-        const position = (formData.get('position') as 'bottom-center' | 'bottom-right') || 'bottom-right';
+        const position = (formData.get('position') as 'bottom-center' | 'bottom-right' | 'bottom-left' | 'top-center' | 'top-right' | 'top-left') || 'bottom-right';
+        const format = (formData.get('format') as string) || 'Page {current} of {total}';
+        const fontSize = Number(formData.get('fontSize')) || 12;
+        const fontColor = (formData.get('fontColor') as string) || '0,0,0';
 
         if (!file) {
             return NextResponse.json({ error: 'File required' }, { status: 400 });
         }
 
         const buffer = await file.arrayBuffer();
+        
+        // Parse font color
+        const colorArray = fontColor.split(',').map(Number) as [number, number, number];
 
         const { addPageNumbers } = await import('@/lib/engines/pdfEngine');
-        const pdfWithNumbers = await addPageNumbers(buffer, position);
+        const pdfWithNumbers = await addPageNumbers(buffer, position, format, fontSize, colorArray);
 
         return new NextResponse(Buffer.from(pdfWithNumbers), {
             headers: {

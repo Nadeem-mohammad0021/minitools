@@ -331,7 +331,7 @@ export async function addImageWatermark(
 /**
  * Adds page numbers to PDF
  */
-export async function addPageNumbers(file: ArrayBuffer, position: 'bottom-center' | 'bottom-right' = 'bottom-right'): Promise<Uint8Array> {
+export async function addPageNumbers(file: ArrayBuffer, position: 'bottom-center' | 'bottom-right' | 'bottom-left' | 'top-center' | 'top-right' | 'top-left' = 'bottom-right', format: string = 'Page {current} of {total}', fontSize: number = 12, fontColor: [number, number, number] = [0, 0, 0]): Promise<Uint8Array> {
   const pdfDoc = await PDFDocument.load(file);
   const pages = pdfDoc.getPages();
   const total = pages.length;
@@ -339,20 +339,56 @@ export async function addPageNumbers(file: ArrayBuffer, position: 'bottom-center
 
   for (let i = 0; i < total; i++) {
     const page = pages[i];
-    const { width } = page.getSize();
-    const text = `${i + 1} / ${total}`;
-    const textWidth = font.widthOfTextAtSize(text, 12);
-
+    const { width, height } = page.getSize();
+    
+    // Generate the text with custom formatting
+    let text = format
+      .replace(/{current}/gi, String(i + 1))
+      .replace(/{total}/gi, String(total))
+      .replace(/{page}/gi, String(i + 1))
+      .replace(/{count}/gi, String(total));
+    
+    const textWidth = font.widthOfTextAtSize(text, fontSize);
+    
+    // Set default positions
     let x = width - textWidth - 20; // bottom-right default
-    if (position === 'bottom-center') {
-      x = width / 2 - textWidth / 2;
+    let y = 20;
+    
+    // Handle different positions
+    switch (position) {
+      case 'bottom-center':
+        x = width / 2 - textWidth / 2;
+        y = 20;
+        break;
+      case 'bottom-left':
+        x = 20;
+        y = 20;
+        break;
+      case 'top-center':
+        x = width / 2 - textWidth / 2;
+        y = height - 20 - fontSize;
+        break;
+      case 'top-right':
+        x = width - textWidth - 20;
+        y = height - 20 - fontSize;
+        break;
+      case 'top-left':
+        x = 20;
+        y = height - 20 - fontSize;
+        break;
+      case 'bottom-right':
+      default:
+        x = width - textWidth - 20;
+        y = 20;
+        break;
     }
 
     page.drawText(text, {
       x,
-      y: 20,
-      size: 12,
+      y,
+      size: fontSize,
       font,
+      color: rgb(fontColor[0], fontColor[1], fontColor[2]),
     });
   }
 

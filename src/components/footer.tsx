@@ -6,13 +6,13 @@ import { useApp } from '@/contexts/AppContext';
 const Footer = () => {
   const { allCategories, popularTools } = useApp();
   return (
-    <footer className="bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-900 pt-16 pb-8">
+    <footer className="bg-gradient-to-t from-slate-100 to-slate-50 dark:from-slate-900 dark:to-slate-950 border-t border-slate-200 dark:border-slate-800 pt-16 pb-8">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           <div className="md:col-span-1">
             <Link href="/" className="flex items-center space-x-2 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg shadow-lg">
-                M
+              <div className="w-10 h-10 flex items-center justify-center">
+              <img src="/logos/logo.png" alt="MiniTools Logo" className="w-full h-full object-contain" />
               </div>
               <span className="text-xl font-bold text-slate-900 dark:text-white">
                 MiniTools

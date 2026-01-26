@@ -5,10 +5,8 @@ import { ToolLayout } from '@/components/ui/ToolLayout';
 import { FileUpload } from '@/components/ui/FileUpload';
 import { Button } from '@/components/ui/button';
 import { Loader2, Download, Image as ImageIcon, Trash2 } from 'lucide-react';
-import * as pdfjs from 'pdfjs-dist';
 
-// Set worker path
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+
 
 interface Thumbnail {
     pageNumber: number;
@@ -27,6 +25,13 @@ const PdfThumbnailGeneratorTool = () => {
         setProgress(0);
 
         try {
+            // Dynamically import pdfjs-dist only when needed
+            const pdfjs = (await import('pdfjs-dist')).default;
+            
+            // Set worker path for the imported module
+            const workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+            (pdfjs.GlobalWorkerOptions as any).workerSrc = workerSrc;
+            
             const arrayBuffer = await selectedFile.arrayBuffer();
             const pdf = await pdfjs.getDocument({ data: arrayBuffer }).promise;
             const numPages = pdf.numPages;

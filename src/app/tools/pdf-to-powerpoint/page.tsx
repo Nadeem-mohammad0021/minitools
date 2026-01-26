@@ -111,3 +111,5 @@ const PdfToPowerpointTool = () => {
         </ToolLayout>
     );
 };
+
+export default PdfToPowerpointTool;

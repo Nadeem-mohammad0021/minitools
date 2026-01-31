@@ -24,9 +24,7 @@ const Footer = () => {
             <p className="text-slate-500 dark:text-slate-400 text-sm">
               by <a href="https://kynex.dev/" className="font-bold italic text-slate-700 dark:text-slate-300 tracking-tight">KYNEX</a><span className="font-bold italic text-slate-500 dark:text-slate-400">.dev</span>
             </p>
-            <p className="text-slate-400 text-xs mt-2">
-              <a href="https://kynex.dev" target="_blank" rel="noopener noreferrer" className="hover:underline">Admin Dashboard</a>
-            </p>
+         
             <div className="flex space-x-4">
               {/* Social placeholders could go here */}
             </div>

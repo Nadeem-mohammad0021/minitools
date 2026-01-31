@@ -44,7 +44,7 @@ const HomePage = () => {
             </h1>
 
             <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-12 leading-relaxed animate-slide-up" style={{ animationDelay: '0.2s' }}>
-              A curated collection of premium online utilities. Convert PDFs, edit images, and process text instantly. No ads, no limits, no registration.
+              A curated collection of premium online utilities. Convert PDFs, edit images, and process text instantly. No limits, no registration.
             </p>
 
             <div className="max-w-3xl mx-auto animate-slide-up" style={{ animationDelay: '0.3s' }}>

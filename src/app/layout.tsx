@@ -50,6 +50,18 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <head>
+        {/* Google tag (gtag.js) */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-BNV21Y90YT"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-BNV21Y90YT');
+            `
+          }}
+        />
         <link rel="apple-touch-icon" sizes="180x180" href="/logos/apple-touch-icon.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/logos/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/logos/favicon-16x16.png" />

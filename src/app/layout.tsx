@@ -4,6 +4,7 @@ import { Inter, Outfit } from 'next/font/google';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/footer';
 import { AppProvider } from '@/contexts/AppContext';
+import { SchemaMarkup } from '@/components/seo/SchemaMarkup';
 
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
@@ -50,18 +51,12 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <head>
-        {/* Google tag (gtag.js) */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-BNV21Y90YT"></script>
         <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-BNV21Y90YT');
-            `
-          }}
-        />
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8057450154530877"
+          crossOrigin="anonymous"
+        ></script>
+
         <link rel="apple-touch-icon" sizes="180x180" href="/logos/apple-touch-icon.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/logos/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/logos/favicon-16x16.png" />
@@ -69,46 +64,7 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="512x512" href="/logos/favicon-512x512.png" />
         <link rel="icon" type="image/x-icon" href="/logos/favicon.ico" />
 
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'WebSite',
-              'name': 'MiniTools by KYNEX.dev - Premium Utility Platform',
-              'url': process.env.NEXT_PUBLIC_BASE_URL || 'https://www.yourwebsite.com',
-              'potentialAction': {
-                '@type': 'SearchAction',
-                'target': `{process.env.NEXT_PUBLIC_BASE_URL || 'https://www.yourwebsite.com'}/search?q={search_term_string}`,
-                'query-input': 'required name=search_term_string'
-              }
-            })
-          }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(
-              {
-                '@context': 'https://schema.org',
-                '@type': 'Organization',
-                'name': 'MiniTools by KYNEX.dev',
-                'url': process.env.NEXT_PUBLIC_BASE_URL || 'https://www.yourwebsite.com',
-                'logo': `${process.env.NEXT_PUBLIC_BASE_URL || 'https://www.yourwebsite.com'}/logos/logo.png`,
-                'sameAs': [
-                  `${process.env.NEXT_PUBLIC_BASE_URL || 'https://www.yourwebsite.com'}/facebook`,
-                  `${process.env.NEXT_PUBLIC_BASE_URL || 'https://www.yourwebsite.com'}/twitter`,
-                  `${process.env.NEXT_PUBLIC_BASE_URL || 'https://www.yourwebsite.com'}/linkedin`
-                ],
-                'publisher': {
-                  '@type': 'Organization',
-                  'name': 'KYNEX.dev',
-                  'url': 'https://kynex.dev/'
-                }
-              }
-            )
-          }}
-        />
+        <SchemaMarkup />
       </head>
       <body className={`${inter.variable} ${outfit.variable} font-sans antialiased bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-50 transition-colors duration-300`}>
         <a href="#main-content" className="sr-only focus:not-sr-only absolute top-2 left-2 z-[100] bg-white dark:bg-gray-900 text-blue-600 dark:text-blue-400 px-3 py-2 rounded-md shadow-sm">Skip to main content</a>
@@ -127,6 +83,6 @@ export default function RootLayout({
           </div>
         </AppProvider>
       </body>
-    </html>
+    </html >
   );
 }

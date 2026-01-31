@@ -809,6 +809,17 @@ export const TOOLS: ToolConfig[] = [
     component: 'SeoPageAnalyzerLiteTool',
     path: '/tools/seo-page-analyzer-lite'
   },
+  {
+    id: 'schema-markup',
+    name: 'Schema Generator',
+    description: 'JSON-LD structured data generator for Organizations, Websites, and Articles.',
+    category: 'seo-tools',
+    icon: '🌐',
+    tags: ['seo', 'schema', 'json-ld', 'structured data', 'metadata'],
+    new: true,
+    component: 'SchemaMarkupGeneratorTool',
+    path: '/tools/schema-markup'
+  },
 
   // 6. FILE & CONVERTERS
   {

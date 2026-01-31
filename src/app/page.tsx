@@ -3,7 +3,7 @@
 import { useApp } from '@/contexts/AppContext';
 import { CategoryCard, ToolCard } from '@/components/ui/ToolCard';
 import { SearchBar } from '@/components/ui/SearchBar';
-import { ToolSEO } from '@/components/seo/ToolSEO';
+import { AdUnit } from '@/components/ads/AdUnit';
 
 const HomePage = () => {
   const {
@@ -57,6 +57,10 @@ const HomePage = () => {
             </div>
           </div>
         </section>
+
+        <div className="container mx-auto px-4 mb-12">
+          <AdUnit />
+        </div>
 
         {/* Main Content Area */}
         {searchTerm ? (

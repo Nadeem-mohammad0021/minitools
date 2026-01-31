@@ -67,13 +67,18 @@ const Footer = () => {
           <div>
             <h4 className="font-bold text-slate-900 dark:text-white mb-6">Company</h4>
             <ul className="space-y-3">
-              {['About Us', 'Privacy Policy', 'Terms of Service', 'Contact'].map((item) => (
-                <li key={item}>
+              {[
+                { name: 'About Us', href: '/about' },
+                { name: 'Contact Us', href: '/contact' },
+                { name: 'Privacy Policy', href: '/privacy' },
+                { name: 'Terms of Service', href: '/terms' }
+              ].map((item) => (
+                <li key={item.name}>
                   <Link
-                    href={`/${item.toLowerCase().replace(/ /g, '-')}`}
-                    className="text-slate-600 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-colors"
+                    href={item.href}
+                    className="text-slate-600 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-colors hover:underline decoration-indigo-500/30 underline-offset-2"
                   >
-                    {item}
+                    {item.name}
                   </Link>
                 </li>
               ))}

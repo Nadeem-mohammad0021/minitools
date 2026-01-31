@@ -1,80 +1,166 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import { Inter, Outfit } from 'next/font/google';
+import { Geist, Geist_Mono } from 'next/font/google';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/footer';
 import { AppProvider } from '@/contexts/AppContext';
-import { SchemaMarkup } from '@/components/seo/SchemaMarkup';
+import SchemaMarkup from '@/components/seo/SchemaMarkup';
+import { Star, Sparkles, Zap } from 'lucide-react';
 
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
-const outfit = Outfit({ subsets: ['latin'], variable: '--font-outfit' });
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
 
-export const metadata: Metadata = {
-  title: {
-    template: '%s | MiniTools by KYNEX.dev',
-    default: 'MiniTools by KYNEX.dev - AI-Powered Pro Utilities 2026',
-  },
-  description: 'Instant, pro-grade AI-powered online tools for PDF, images, SEO, and development. Secure, browser-based, and 100% free for everyone.',
-  metadataBase: new URL('https://minitools.kynex.dev'),
-  keywords: [
-    'AI online tools', 'free PDF utilities', 'secure image converter',
-    'bulk file processing', 'private developer tools', 'SEO analyzer 2026',
-    'instant productivity tools', 'no-upload file tools', 'KYNEX dev platform'
-  ],
-  icons: {
-    icon: '/logos/favicon.ico',
-    shortcut: '/logos/favicon-16x16.png',
-    apple: '/logos/apple-touch-icon.png',
-  },
-  openGraph: {
-    title: 'MiniTools by KYNEX.dev - AI-Powered Pro Utilities 2026',
-    description: 'Instant, pro-grade AI-powered online tools for PDF, images, SEO, and development. Secure and browser-based.',
-    type: 'website',
-    url: 'https://minitools.kynex.dev',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'MiniTools by KYNEX.dev - AI-Powered Pro Utilities 2026',
-    description: 'Instant, pro-grade AI-powered online tools for PDF, images, SEO, and development.',
-  },
-  alternates: {
-    canonical: 'https://minitools.kynex.dev',
-  },
-};
+// ✅ Dynamic Metadata Function
+export async function generateMetadata({ params, searchParams }: { params: any; searchParams: any }): Promise<Metadata> {
+  // Default title & description
+  let title = 'MiniTools by KYNEX.dev - Professional Online Utilities';
+  let description =
+    'Professional online utilities for PDF, images, SEO, and development. Free, secure, and browser-based processing with no registration required.';
+
+  return {
+    title,
+    description,
+    keywords: ["minitools.kynex.dev", "PDF tools", "image converter", "SEO tools", "developer utilities", "free online tools", "browser-based processing", "privacy focused"],
+    authors: [{ name: "KYNEX.dev" }],
+    creator: "KYNEX.dev",
+    publisher: "KYNEX.dev",
+    robots: {
+      index: true,
+      follow: true
+    },
+    openGraph: {
+      title,
+      description,
+      url: 'https://minitools.kynex.dev',
+      siteName: 'MiniTools by KYNEX.dev',
+      images: [
+        {
+          url: '/logos/logo.png',
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+      locale: 'en_US',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: ['/logos/logo.png'],
+      creator: '@kynexdev',
+    },
+    icons: {
+      icon: [
+        { url: '/logos/favicon.ico' },
+        { url: '/logos/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+        { url: '/logos/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      ],
+      apple: { url: '/logos/apple-touch-icon.png' },
+    },
+    metadataBase: new URL('https://minitools.kynex.dev'),
+    alternates: {
+      canonical: "https://minitools.kynex.dev"
+    }
+  };
+}
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
-    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+    <html lang="en" className="dark">
       <head>
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8057450154530877"
-          crossOrigin="anonymous"
-        ></script>
-
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto+Mono:wght@700&display=swap"
+          rel="stylesheet"
+        />
+        <style>{`
+          .font-quador {
+            font-family: "quador", Arial, sans-serif;
+            font-weight: 700;
+            font-style: italic;
+          }
+          .logo-text {
+            font-family: "quador", Arial, sans-serif;
+            font-weight: 700;
+            font-style: italic;
+            letter-spacing: -0.02em;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+          }
+          @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+          }
+          .floating {
+            animation: float 6s ease-in-out infinite;
+          }
+          @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+          }
+          .pulse-animation {
+            animation: pulse 4s ease-in-out infinite;
+          }
+          @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+          }
+          .animate-gradient {
+            background-size: 200% 200%;
+            animation: gradient 8s ease infinite;
+          }
+          .animate-float {
+            animation: float 6s ease-in-out infinite;
+          }
+        `}</style>
         <link rel="apple-touch-icon" sizes="180x180" href="/logos/apple-touch-icon.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/logos/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/logos/favicon-16x16.png" />
-        <link rel="icon" type="image/png" sizes="192x192" href="/logos/favicon-192x192.png" />
-        <link rel="icon" type="image/png" sizes="512x512" href="/logos/favicon-512x512.png" />
-        <link rel="icon" type="image/x-icon" href="/logos/favicon.ico" />
 
         <SchemaMarkup />
       </head>
-      <body className={`${inter.variable} ${outfit.variable} font-sans antialiased bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-50 transition-colors duration-300`}>
-        <a href="#main-content" className="sr-only focus:not-sr-only absolute top-2 left-2 z-[100] bg-white dark:bg-gray-900 text-blue-600 dark:text-blue-400 px-3 py-2 rounded-md shadow-sm">Skip to main content</a>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-gray-50 dark:bg-gray-950 relative`}>
+        {/* Animated background elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
+          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-50/30 via-transparent to-purple-50/30 dark:from-blue-950/20 dark:via-transparent dark:to-purple-950/20 animate-gradient"></div>
+          <div className="absolute -top-1/2 -left-1/2 w-[200%] h-[200%] bg-[radial-gradient(ellipse_at_center,rgba(15,76,117,0.1)_0%,rgba(0,0,0,0)_70%)] dark:bg-[radial-gradient(ellipse_at_center,rgba(15,76,117,0.2)_0%,rgba(0,0,0,0)_70%)]"></div>
+          
+          {/* Floating elements */}
+          <div className="absolute top-1/4 left-1/6 floating animate-float" style={{ animationDelay: '0s' }}>
+            <Star className="h-6 w-6 text-blue-400/30 dark:text-blue-400/20" fill="currentColor" />
+          </div>
+          <div className="absolute top-1/3 right-1/4 floating animate-float" style={{ animationDelay: '2s' }}>
+            <Sparkles className="h-5 w-5 text-purple-400/30 dark:text-purple-400/20" />
+          </div>
+          <div className="absolute bottom-1/4 left-1/3 floating animate-float" style={{ animationDelay: '4s' }}>
+            <Zap className="h-6 w-6 text-cyan-400/30 dark:text-cyan-400/20" />
+          </div>
+        </div>
+        
         <AppProvider>
-          <div className="flex flex-col min-h-screen relative overflow-x-hidden">
-            {/* Background Gradients */}
-            <div className="fixed inset-0 z-[-1] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-100/50 via-white to-white dark:from-indigo-950/30 dark:via-slate-950 dark:to-slate-950 pointer-events-none" />
-
+          <div className="relative flex min-h-screen flex-col">
+            <SchemaMarkup />
             <Navbar />
-            <main id="main-content" className="flex-grow pt-24 pb-16">
+            <main id="main-content" className="flex-1 pt-24 pb-16">
               <div className="mx-auto px-4">
                 {children}
               </div>
@@ -83,6 +169,6 @@ export default function RootLayout({
           </div>
         </AppProvider>
       </body>
-    </html >
+    </html>
   );
 }

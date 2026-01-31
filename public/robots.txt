@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://minitools.kynex.dev/sitemap.xml
+
+# Block access to API routes
+Disallow: /api/
+
+# Block access to Next.js specific files
+Disallow: /_next/
+Disallow: /static/
+
+# Crawl delay for polite crawling
+Crawl-delay: 10
